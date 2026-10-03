@@ -3,7 +3,7 @@ name: Update site status
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "*/30 * * * *"
 
 permissions:
   contents: write
@@ -16,28 +16,65 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Generate status
+      - name: Download sources
+        shell: bash
         run: |
-          DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          set -e
+
+          URL1="https://raw.githubusercontent.com/nwl1909/do/refs/heads/main/configibf"
+          URL2="https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+
+          curl -L --fail --retry 3 "$URL1" -o source1.txt
+          curl -L --fail --retry 3 "$URL2" -o source2.txt
+
+      - name: Build subscription
+        shell: bash
+        run: |
+          set -e
+
+          {
+            echo "# profile-title: ObxodBS by Edicoral"
+            echo ""
+
+            grep -E '^(vless://|ss://|trojan://|vmess://)' source1.txt || true
+            grep -E '^(vless://|ss://|trojan://|vmess://)' source2.txt || true
+          } > sub.txt
+
+      - name: Calculate statistics
+        shell: bash
+        run: |
+          set -e
+
+          COUNT=$(grep -Ec '^(vless://|ss://|trojan://|vmess://)' sub.txt || true)
+
+          UPDATED=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
           cat > status.json <<EOF
           {
             "online": true,
             "title": "ObxodBS by Edicoral",
-            "updated": "$DATE"
+            "configs": $COUNT,
+            "updated": "$UPDATED"
           }
           EOF
 
+          echo "Configs: $COUNT"
+          cat status.json
+
       - name: Commit changes
+        shell: bash
         run: |
+          set -e
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add status.json
+          git add sub.txt status.json
 
           if git diff --cached --quiet; then
-            echo "Nothing to commit"
-          else
-            git commit -m "Update site status"
-            git push
+            echo "Nothing to update"
+            exit 0
           fi
+
+          git commit -m "Auto update subscription"
+          git push
