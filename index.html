@@ -14,6 +14,7 @@
     body {
       margin: 0;
       min-height: 100vh;
+      padding: 16px;
 
       font-family: Arial, sans-serif;
 
@@ -23,22 +24,19 @@
       display: flex;
       justify-content: center;
       align-items: center;
-
-      padding: 20px;
     }
 
     .container {
       width: 100%;
-      max-width: 650px;
+      max-width: 520px;
     }
 
     .card {
       background: #15181d;
-
       border: 1px solid #292e36;
-      border-radius: 20px;
+      border-radius: 18px;
 
-      padding: 28px;
+      padding: 24px;
 
       box-shadow:
         0 15px 50px rgba(0, 0, 0, .35);
@@ -46,38 +44,32 @@
 
     .logo {
       text-align: center;
-      font-size: 44px;
-      margin-bottom: 8px;
+      font-size: 48px;
+      margin-bottom: 4px;
     }
 
     h1 {
-      margin: 0;
       text-align: center;
-      font-size: 30px;
+      margin: 0;
+      font-size: 28px;
     }
 
     .subtitle {
-      color: #9299a5;
       text-align: center;
-
-      margin-top: 8px;
-      margin-bottom: 25px;
+      color: #9299a5;
+      margin-top: 7px;
+      margin-bottom: 24px;
     }
 
     .status {
-      padding: 15px;
-
+      padding: 14px;
       border-radius: 12px;
 
-      font-weight: bold;
       text-align: center;
+      font-weight: bold;
 
-      margin-bottom: 20px;
+      margin-bottom: 16px;
 
-      transition: .2s;
-    }
-
-    .status.online {
       background: #102417;
       color: #6cff91;
     }
@@ -89,19 +81,17 @@
 
     .status.loading {
       background: #1c2027;
-      color: #9299a5;
+      color: #aeb5c0;
     }
 
     .total {
       background: #1c2027;
-
       border-radius: 14px;
 
       padding: 20px;
 
       text-align: center;
-
-      margin-bottom: 15px;
+      margin-bottom: 14px;
     }
 
     .total-label {
@@ -110,34 +100,28 @@
     }
 
     .total-value {
-      font-size: 36px;
+      font-size: 38px;
       font-weight: bold;
-
-      margin-top: 6px;
+      margin-top: 5px;
     }
 
-    .source {
+    .info {
       background: #1c2027;
-
-      padding: 15px;
-
       border-radius: 12px;
 
+      padding: 15px;
       margin-top: 10px;
     }
 
-    .source-title {
+    .info-title {
       font-weight: bold;
-      font-size: 16px;
+      margin-bottom: 7px;
     }
 
-    .source-info {
+    .info-text {
       color: #9299a5;
-
-      margin-top: 6px;
-
       font-size: 14px;
-      line-height: 1.7;
+      line-height: 1.6;
     }
 
     .button {
@@ -153,12 +137,12 @@
 
       border-radius: 12px;
 
-      margin-top: 22px;
+      margin-top: 20px;
 
       font-size: 16px;
       font-weight: bold;
 
-      transition: .2s;
+      transition: background .15s;
     }
 
     .button:hover {
@@ -173,21 +157,11 @@
       margin-top: 20px;
 
       font-size: 13px;
+      line-height: 1.5;
     }
 
     .error {
       color: #ff7777;
-      text-align: center;
-
-      background: #281616;
-
-      padding: 14px;
-
-      border-radius: 12px;
-
-      margin-top: 15px;
-
-      display: none;
     }
   </style>
 </head>
@@ -210,9 +184,14 @@
       by Edicoral
     </div>
 
-    <div id="status" class="status loading">
+
+    <div
+      id="status"
+      class="status loading"
+    >
       ⏳ ПРОВЕРКА СИСТЕМЫ...
     </div>
+
 
     <div class="total">
 
@@ -220,47 +199,56 @@
         ВСЕГО КОНФИГОВ
       </div>
 
-      <div id="total" class="total-value">
+      <div
+        id="total"
+        class="total-value"
+      >
         —
       </div>
 
     </div>
 
-    <div class="source">
 
-      <div class="source-title">
-        Источник 1
+    <div class="info">
+
+      <div class="info-title">
+        📡 Статус сервиса
       </div>
 
-      <div id="source1" class="source-info">
+      <div
+        id="serviceInfo"
+        class="info-text"
+      >
         Проверка...
       </div>
 
     </div>
 
-    <div class="source">
 
-      <div class="source-title">
-        Источник 2
+    <div class="info">
+
+      <div class="info-title">
+        🕐 Последнее обновление
       </div>
 
-      <div id="source2" class="source-info">
+      <div
+        id="updated"
+        class="info-text"
+      >
         Проверка...
       </div>
 
     </div>
+
 
     <a
       class="button"
-      href="https://obxodbs.edicoralvpn.workers.dev/sub"
+      href="sub.txt"
       target="_blank"
     >
       🔗 ПОЛУЧИТЬ ПОДПИСКУ
     </a>
 
-    <div id="error" class="error">
-      ⚠️ Не удалось связаться с системой
-    </div>
 
     <div class="footer">
       ObxodBS • Edicoral
@@ -272,188 +260,200 @@
 
 </div>
 
+
 <script>
 
-const API =
-  "https://obxodbs.edicoralvpn.workers.dev/status";
+async function loadStatus() {
 
-const statusElement =
-  document.getElementById("status");
+  const statusElement =
+    document.getElementById("status");
 
-const totalElement =
-  document.getElementById("total");
+  const totalElement =
+    document.getElementById("total");
 
-const source1Element =
-  document.getElementById("source1");
+  const serviceInfo =
+    document.getElementById("serviceInfo");
 
-const source2Element =
-  document.getElementById("source2");
+  const updatedElement =
+    document.getElementById("updated");
 
-const errorElement =
-  document.getElementById("error");
-
-
-function setMaintenance() {
-
-  statusElement.className =
-    "status offline";
-
-  statusElement.textContent =
-    "🔴 ТЕХНИЧЕСКИЕ РАБОТЫ";
-
-  totalElement.textContent =
-    "—";
-
-  source1Element.textContent =
-    "🔴 Сервис временно приостановлен";
-
-  source2Element.textContent =
-    "🔴 Сервис временно приостановлен";
-}
-
-
-function setOnline(data) {
-
-  if (data.online) {
-
-    statusElement.className =
-      "status online";
-
-    statusElement.textContent =
-      "🟢 СИСТЕМА РАБОТАЕТ";
-
-  } else {
-
-    statusElement.className =
-      "status offline";
-
-    statusElement.textContent =
-      "🔴 ЕСТЬ ПРОБЛЕМЫ";
-  }
-
-
-  totalElement.textContent =
-    data.configs ?? 0;
-
-
-  if (data.sources && data.sources[0]) {
-
-    const source =
-      data.sources[0];
-
-    source1Element.innerHTML = `
-
-      ${source.ok
-        ? "🟢 Источник работает"
-        : "🔴 Источник недоступен"}
-
-      <br>
-
-      📦 Конфигов:
-      ${source.count}
-
-      <br>
-
-      🕐 Обновление:
-      ${source.date}
-
-    `;
-  }
-
-
-  if (data.sources && data.sources[1]) {
-
-    const source =
-      data.sources[1];
-
-    source2Element.innerHTML = `
-
-      ${source.ok
-        ? "🟢 Источник работает"
-        : "🔴 Источник недоступен"}
-
-      <br>
-
-      📦 Конфигов:
-      ${source.count}
-
-      <br>
-
-      🕐 Обновление:
-      ${source.date}
-
-    `;
-  }
-}
-
-
-async function checkStatus() {
 
   try {
 
-    errorElement.style.display =
-      "none";
+    /*
+     * Загружаем status.json
+     * напрямую с GitHub Pages.
+     *
+     * Никакого Worker здесь нет.
+     */
 
-    const response =
-      await fetch(API, {
-        cache: "no-store"
-      });
-
-
-    if (!response.ok) {
-      throw new Error(
-        "HTTP " + response.status
+    const statusResponse =
+      await fetch(
+        "status.json?t=" + Date.now(),
+        {
+          cache: "no-store"
+        }
       );
+
+
+    if (!statusResponse.ok) {
+      throw new Error("status.json unavailable");
     }
 
 
-    const data =
-      await response.json();
+    const status =
+      await statusResponse.json();
 
 
-    if (data.maintenance) {
+    /*
+     * Загружаем sub.txt
+     * с этого же GitHub Pages.
+     */
 
-      setMaintenance();
+    const subResponse =
+      await fetch(
+        "sub.txt?t=" + Date.now(),
+        {
+          cache: "no-store"
+        }
+      );
+
+
+    let configs = 0;
+
+
+    if (subResponse.ok) {
+
+      const text =
+        await subResponse.text();
+
+
+      /*
+       * Считаем строки конфигураций.
+       */
+
+      configs =
+        text
+          .split(/\r?\n/)
+          .filter(line => {
+
+            const value =
+              line.trim().toLowerCase();
+
+            return (
+              value.startsWith("vless://") ||
+              value.startsWith("vmess://") ||
+              value.startsWith("trojan://") ||
+              value.startsWith("ss://")
+            );
+
+          })
+          .length;
+    }
+
+
+    /*
+     * Статус
+     */
+
+    if (status.online === true) {
+
+      statusElement.className =
+        "status";
+
+      statusElement.textContent =
+        "🟢 СИСТЕМА РАБОТАЕТ";
+
+      serviceInfo.innerHTML =
+        "🟢 Сервис доступен";
 
     } else {
 
-      setOnline(data);
+      statusElement.className =
+        "status offline";
+
+      statusElement.textContent =
+        "🔴 СЕРВИС НЕДОСТУПЕН";
+
+      serviceInfo.innerHTML =
+        '<span class="error">🔴 Сервис недоступен</span>';
+    }
+
+
+    /*
+     * Количество конфигов
+     */
+
+    totalElement.textContent =
+      configs;
+
+
+    /*
+     * Дата обновления
+     */
+
+    if (status.updated) {
+
+      const date =
+        new Date(status.updated);
+
+      updatedElement.textContent =
+        date.toLocaleString(
+          "ru-RU",
+          {
+            dateStyle: "medium",
+            timeStyle: "short"
+          }
+        );
+
+    } else {
+
+      updatedElement.textContent =
+        "дата не указана";
     }
 
 
   } catch (error) {
 
+    console.error(error);
+
+
     statusElement.className =
       "status offline";
 
     statusElement.textContent =
-      "🔴 СИСТЕМА НЕДОСТУПНА";
+      "🔴 ОШИБКА ПРОВЕРКИ";
+
+
+    serviceInfo.innerHTML =
+      '<span class="error">🔴 Не удалось получить данные</span>';
+
 
     totalElement.textContent =
       "—";
 
-    source1Element.textContent =
-      "⚠️ Не удалось проверить";
 
-    source2Element.textContent =
-      "⚠️ Не удалось проверить";
-
-    errorElement.style.display =
-      "block";
-
+    updatedElement.textContent =
+      "нет данных";
   }
 
 }
 
 
-// Проверяем сразу
-checkStatus();
+/*
+ * Запуск
+ */
+
+loadStatus();
 
 
-// Обновляем каждые 30 секунд
+/*
+ * Автообновление каждые 60 секунд
+ */
+
 setInterval(
-  checkStatus,
-  30000
+  loadStatus,
+  60000
 );
 
 </script>
