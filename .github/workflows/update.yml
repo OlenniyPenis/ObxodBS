@@ -1,4 +1,4 @@
-name: Update site status
+name: Auto Update Test
 
 on:
   workflow_dispatch:
@@ -13,50 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Count entries in sub.txt
-        shell: bash
+      - name: Скачать свежий файл
         run: |
-          set -e
+          curl -L --fail \
+            "https://raw.githubusercontent.com/github/gitignore/main/README.md" \
+            -o test.txt
 
-          if [ ! -f sub.txt ]; then
-            echo "sub.txt not found"
-            exit 1
-          fi
-
-          # Считаем непустые строки в обычном текстовом файле.
-          COUNT=$(grep -cve '^[[:space:]]*$' sub.txt || true)
-
-          UPDATED=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-
-          cat > status.json <<EOF
-          {
-            "online": true,
-            "title": "ObxodBS by Edicoral",
-            "configs": $COUNT,
-            "updated": "$UPDATED"
-          }
-          EOF
-
-          echo "Entries in sub.txt: $COUNT"
-          cat status.json
-
-      - name: Commit status
-        shell: bash
-        run: |
-          set -e
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add status.json
-
-          if git diff --cached --quiet; then
-            echo "Nothing to update"
-            exit 0
-          fi
-
-          git commit -m "Update site status"
-          git push
+      - name: Сохранить результат
+        uses: actions/upload-artifact@v4
+        with:
+          name: updated-file
+          path: test.txt
