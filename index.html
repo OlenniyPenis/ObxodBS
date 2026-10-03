@@ -1,1 +1,462 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>ObxodBS by Edicoral</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      font-family: Arial, sans-serif;
+
+      background: #0b0d10;
+      color: #f1f1f1;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 650px;
+    }
+
+    .card {
+      background: #15181d;
+
+      border: 1px solid #292e36;
+      border-radius: 20px;
+
+      padding: 28px;
+
+      box-shadow:
+        0 15px 50px rgba(0, 0, 0, .35);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 44px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      text-align: center;
+      font-size: 30px;
+    }
+
+    .subtitle {
+      color: #9299a5;
+      text-align: center;
+
+      margin-top: 8px;
+      margin-bottom: 25px;
+    }
+
+    .status {
+      padding: 15px;
+
+      border-radius: 12px;
+
+      font-weight: bold;
+      text-align: center;
+
+      margin-bottom: 20px;
+
+      transition: .2s;
+    }
+
+    .status.online {
+      background: #102417;
+      color: #6cff91;
+    }
+
+    .status.offline {
+      background: #281616;
+      color: #ff7777;
+    }
+
+    .status.loading {
+      background: #1c2027;
+      color: #9299a5;
+    }
+
+    .total {
+      background: #1c2027;
+
+      border-radius: 14px;
+
+      padding: 20px;
+
+      text-align: center;
+
+      margin-bottom: 15px;
+    }
+
+    .total-label {
+      color: #9299a5;
+      font-size: 14px;
+    }
+
+    .total-value {
+      font-size: 36px;
+      font-weight: bold;
+
+      margin-top: 6px;
+    }
+
+    .source {
+      background: #1c2027;
+
+      padding: 15px;
+
+      border-radius: 12px;
+
+      margin-top: 10px;
+    }
+
+    .source-title {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .source-info {
+      color: #9299a5;
+
+      margin-top: 6px;
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .button {
+      display: block;
+
+      text-align: center;
+      text-decoration: none;
+
+      background: #242932;
+      color: white;
+
+      padding: 15px;
+
+      border-radius: 12px;
+
+      margin-top: 22px;
+
+      font-size: 16px;
+      font-weight: bold;
+
+      transition: .2s;
+    }
+
+    .button:hover {
+      background: #303641;
+    }
+
+    .footer {
+      text-align: center;
+
+      color: #626a76;
+
+      margin-top: 20px;
+
+      font-size: 13px;
+    }
+
+    .error {
+      color: #ff7777;
+      text-align: center;
+
+      background: #281616;
+
+      padding: 14px;
+
+      border-radius: 12px;
+
+      margin-top: 15px;
+
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="card">
+
+    <div class="logo">
+      🛡️
+    </div>
+
+    <h1>
+      ObxodBS
+    </h1>
+
+    <div class="subtitle">
+      by Edicoral
+    </div>
+
+    <div id="status" class="status loading">
+      ⏳ ПРОВЕРКА СИСТЕМЫ...
+    </div>
+
+    <div class="total">
+
+      <div class="total-label">
+        ВСЕГО КОНФИГОВ
+      </div>
+
+      <div id="total" class="total-value">
+        —
+      </div>
+
+    </div>
+
+    <div class="source">
+
+      <div class="source-title">
+        Источник 1
+      </div>
+
+      <div id="source1" class="source-info">
+        Проверка...
+      </div>
+
+    </div>
+
+    <div class="source">
+
+      <div class="source-title">
+        Источник 2
+      </div>
+
+      <div id="source2" class="source-info">
+        Проверка...
+      </div>
+
+    </div>
+
+    <a
+      class="button"
+      href="https://obxodbs.edicoralvpn.workers.dev/sub"
+      target="_blank"
+    >
+      🔗 ПОЛУЧИТЬ ПОДПИСКУ
+    </a>
+
+    <div id="error" class="error">
+      ⚠️ Не удалось связаться с системой
+    </div>
+
+    <div class="footer">
+      ObxodBS • Edicoral
+      <br>
+      Статус обновляется автоматически
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const API =
+  "https://obxodbs.edicoralvpn.workers.dev/status";
+
+const statusElement =
+  document.getElementById("status");
+
+const totalElement =
+  document.getElementById("total");
+
+const source1Element =
+  document.getElementById("source1");
+
+const source2Element =
+  document.getElementById("source2");
+
+const errorElement =
+  document.getElementById("error");
+
+
+function setMaintenance() {
+
+  statusElement.className =
+    "status offline";
+
+  statusElement.textContent =
+    "🔴 ТЕХНИЧЕСКИЕ РАБОТЫ";
+
+  totalElement.textContent =
+    "—";
+
+  source1Element.textContent =
+    "🔴 Сервис временно приостановлен";
+
+  source2Element.textContent =
+    "🔴 Сервис временно приостановлен";
+}
+
+
+function setOnline(data) {
+
+  if (data.online) {
+
+    statusElement.className =
+      "status online";
+
+    statusElement.textContent =
+      "🟢 СИСТЕМА РАБОТАЕТ";
+
+  } else {
+
+    statusElement.className =
+      "status offline";
+
+    statusElement.textContent =
+      "🔴 ЕСТЬ ПРОБЛЕМЫ";
+  }
+
+
+  totalElement.textContent =
+    data.configs ?? 0;
+
+
+  if (data.sources && data.sources[0]) {
+
+    const source =
+      data.sources[0];
+
+    source1Element.innerHTML = `
+
+      ${source.ok
+        ? "🟢 Источник работает"
+        : "🔴 Источник недоступен"}
+
+      <br>
+
+      📦 Конфигов:
+      ${source.count}
+
+      <br>
+
+      🕐 Обновление:
+      ${source.date}
+
+    `;
+  }
+
+
+  if (data.sources && data.sources[1]) {
+
+    const source =
+      data.sources[1];
+
+    source2Element.innerHTML = `
+
+      ${source.ok
+        ? "🟢 Источник работает"
+        : "🔴 Источник недоступен"}
+
+      <br>
+
+      📦 Конфигов:
+      ${source.count}
+
+      <br>
+
+      🕐 Обновление:
+      ${source.date}
+
+    `;
+  }
+}
+
+
+async function checkStatus() {
+
+  try {
+
+    errorElement.style.display =
+      "none";
+
+    const response =
+      await fetch(API, {
+        cache: "no-store"
+      });
+
+
+    if (!response.ok) {
+      throw new Error(
+        "HTTP " + response.status
+      );
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if (data.maintenance) {
+
+      setMaintenance();
+
+    } else {
+
+      setOnline(data);
+    }
+
+
+  } catch (error) {
+
+    statusElement.className =
+      "status offline";
+
+    statusElement.textContent =
+      "🔴 СИСТЕМА НЕДОСТУПНА";
+
+    totalElement.textContent =
+      "—";
+
+    source1Element.textContent =
+      "⚠️ Не удалось проверить";
+
+    source2Element.textContent =
+      "⚠️ Не удалось проверить";
+
+    errorElement.style.display =
+      "block";
+
+  }
+
+}
+
+
+// Проверяем сразу
+checkStatus();
+
+
+// Обновляем каждые 30 секунд
+setInterval(
+  checkStatus,
+  30000
+);
+
+</script>
+
+</body>
+</html>
