@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>ObxodBS by Edicoral</title>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -14,7 +20,6 @@
     body {
       margin: 0;
       min-height: 100vh;
-      padding: 16px;
 
       font-family: Arial, sans-serif;
 
@@ -24,54 +29,66 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
+      padding: 20px;
     }
 
     .container {
       width: 100%;
-      max-width: 520px;
+      max-width: 650px;
     }
 
     .card {
       background: #15181d;
-      border: 1px solid #292e36;
-      border-radius: 18px;
 
-      padding: 24px;
+      border: 1px solid #292e36;
+      border-radius: 20px;
+
+      padding: 30px;
 
       box-shadow:
         0 15px 50px rgba(0, 0, 0, .35);
     }
 
     .logo {
+      font-size: 42px;
+
       text-align: center;
-      font-size: 48px;
-      margin-bottom: 4px;
+
+      margin-bottom: 8px;
     }
 
     h1 {
-      text-align: center;
       margin: 0;
-      font-size: 28px;
+
+      text-align: center;
+
+      font-size: 30px;
     }
 
     .subtitle {
-      text-align: center;
       color: #9299a5;
-      margin-top: 7px;
-      margin-bottom: 24px;
+
+      text-align: center;
+
+      margin-top: 8px;
+      margin-bottom: 28px;
     }
 
     .status {
-      padding: 14px;
-      border-radius: 12px;
+      padding: 18px;
 
-      text-align: center;
-      font-weight: bold;
-
-      margin-bottom: 16px;
+      border-radius: 14px;
 
       background: #102417;
       color: #6cff91;
+
+      font-weight: bold;
+      font-size: 18px;
+
+      text-align: center;
+
+      margin-bottom: 20px;
     }
 
     .status.offline {
@@ -79,55 +96,95 @@
       color: #ff7777;
     }
 
+    .status.maintenance {
+      background: #281616;
+      color: #ff7777;
+    }
+
     .status.loading {
       background: #1c2027;
-      color: #aeb5c0;
+      color: #9299a5;
+    }
+
+    .maintenance-message {
+      background: #1c2027;
+
+      border-radius: 14px;
+
+      padding: 20px;
+
+      color: #d7dbe1;
+
+      line-height: 1.6;
+
+      text-align: center;
+
+      margin-bottom: 15px;
     }
 
     .total {
       background: #1c2027;
+
       border-radius: 14px;
 
       padding: 20px;
 
       text-align: center;
-      margin-bottom: 14px;
+
+      margin-bottom: 15px;
     }
 
     .total-label {
       color: #9299a5;
+
       font-size: 14px;
     }
 
     .total-value {
-      font-size: 38px;
+      font-size: 36px;
+
       font-weight: bold;
-      margin-top: 5px;
+
+      margin-top: 6px;
     }
 
-    .info {
+    .source {
       background: #1c2027;
-      border-radius: 12px;
 
       padding: 15px;
+
+      border-radius: 12px;
+
       margin-top: 10px;
     }
 
-    .info-title {
+    .source-title {
       font-weight: bold;
-      margin-bottom: 7px;
     }
 
-    .info-text {
+    .source-info {
       color: #9299a5;
+
+      margin-top: 6px;
+
       font-size: 14px;
+
       line-height: 1.6;
+    }
+
+    .source-ok {
+      color: #6cff91;
+    }
+
+    .source-error {
+      color: #ff7777;
     }
 
     .button {
       display: block;
 
       text-align: center;
+
       text-decoration: none;
 
       background: #242932;
@@ -137,12 +194,10 @@
 
       border-radius: 12px;
 
-      margin-top: 20px;
+      margin-top: 22px;
 
       font-size: 16px;
       font-weight: bold;
-
-      transition: background .15s;
     }
 
     .button:hover {
@@ -157,14 +212,18 @@
       margin-top: 20px;
 
       font-size: 13px;
+
       line-height: 1.5;
     }
 
-    .error {
-      color: #ff7777;
+    .hidden {
+      display: none;
     }
+
   </style>
+
 </head>
+
 
 <body>
 
@@ -185,6 +244,8 @@
     </div>
 
 
+    <!-- СТАТУС -->
+
     <div
       id="status"
       class="status loading"
@@ -193,67 +254,99 @@
     </div>
 
 
-    <div class="total">
+    <!-- СООБЩЕНИЕ ТЕХРАБОТ -->
 
-      <div class="total-label">
-        ВСЕГО КОНФИГОВ
-      </div>
-
-      <div
-        id="total"
-        class="total-value"
-      >
-        —
-      </div>
-
-    </div>
-
-
-    <div class="info">
-
-      <div class="info-title">
-        📡 Статус сервиса
-      </div>
-
-      <div
-        id="serviceInfo"
-        class="info-text"
-      >
-        Проверка...
-      </div>
-
-    </div>
-
-
-    <div class="info">
-
-      <div class="info-title">
-        🕐 Последнее обновление
-      </div>
-
-      <div
-        id="updated"
-        class="info-text"
-      >
-        Проверка...
-      </div>
-
-    </div>
-
-
-    <a
-      class="button"
-      href="sub.txt"
-      target="_blank"
+    <div
+      id="maintenanceMessage"
+      class="maintenance-message hidden"
     >
-      🔗 ПОЛУЧИТЬ ПОДПИСКУ
-    </a>
 
+      <strong>
+        СЕРВИС ВРЕМЕННО ПРИОСТАНОВЛЕН
+      </strong>
+
+      <br>
+      <br>
+
+      Воркер устал, ждите фикс!
+
+      <br>
+      <br>
+
+      Вся свежая информация в ТГК
+
+    </div>
+
+
+    <!-- ОСНОВНАЯ ИНФОРМАЦИЯ -->
+
+    <div id="mainContent">
+
+
+      <!-- ОБЩЕЕ КОЛИЧЕСТВО -->
+
+      <div class="total">
+
+        <div class="total-label">
+          ВСЕГО КОНФИГОВ
+        </div>
+
+        <div
+          id="total"
+          class="total-value"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <!-- ИСТОЧНИКИ -->
+
+      <div id="sources"></div>
+
+
+      <!-- ПОСЛЕДНЕЕ ОБНОВЛЕНИЕ -->
+
+      <div class="source">
+
+        <div class="source-title">
+          🕐 Последнее обновление
+        </div>
+
+        <div
+          id="updated"
+          class="source-info"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <!-- КНОПКА ПОДПИСКИ -->
+
+      <a
+        class="button"
+        href="sub.txt"
+        target="_blank"
+      >
+        🔗 ПОЛУЧИТЬ ПОДПИСКУ
+      </a>
+
+    </div>
+
+
+    <!-- FOOTER -->
 
     <div class="footer">
+
       ObxodBS • Edicoral
+
       <br>
+
       Статус обновляется автоматически
+
     </div>
 
   </div>
@@ -263,200 +356,329 @@
 
 <script>
 
-async function loadStatus() {
+  async function loadStatus() {
 
-  const statusElement =
-    document.getElementById("status");
+    const statusElement =
+      document.getElementById("status");
 
-  const totalElement =
-    document.getElementById("total");
+    const maintenanceMessage =
+      document.getElementById("maintenanceMessage");
 
-  const serviceInfo =
-    document.getElementById("serviceInfo");
+    const mainContent =
+      document.getElementById("mainContent");
 
-  const updatedElement =
-    document.getElementById("updated");
+    const totalElement =
+      document.getElementById("total");
 
+    const sourcesElement =
+      document.getElementById("sources");
 
-  try {
-
-    /*
-     * Загружаем status.json
-     * напрямую с GitHub Pages.
-     *
-     * Никакого Worker здесь нет.
-     */
-
-    const statusResponse =
-      await fetch(
-        "status.json?t=" + Date.now(),
-        {
-          cache: "no-store"
-        }
-      );
+    const updatedElement =
+      document.getElementById("updated");
 
 
-    if (!statusResponse.ok) {
-      throw new Error("status.json unavailable");
-    }
+    try {
+
+      /*
+       * Получаем status.json
+       */
+
+      const response =
+        await fetch(
+          "status.json?t=" + Date.now(),
+          {
+            cache: "no-store"
+          }
+        );
 
 
-    const status =
-      await statusResponse.json();
+      if (!response.ok) {
+
+        throw new Error(
+          "status.json unavailable"
+        );
+
+      }
 
 
-    /*
-     * Загружаем sub.txt
-     * с этого же GitHub Pages.
-     */
-
-    const subResponse =
-      await fetch(
-        "sub.txt?t=" + Date.now(),
-        {
-          cache: "no-store"
-        }
-      );
-
-
-    let configs = 0;
-
-
-    if (subResponse.ok) {
-
-      const text =
-        await subResponse.text();
+      const data =
+        await response.json();
 
 
       /*
-       * Считаем строки конфигураций.
+       * =================================
+       * ТЕХНИЧЕСКИЕ РАБОТЫ
+       * =================================
        */
 
-      configs =
-        text
-          .split(/\r?\n/)
-          .filter(line => {
+      if (data.maintenance === true) {
 
-            const value =
-              line.trim().toLowerCase();
+        statusElement.className =
+          "status maintenance";
 
-            return (
-              value.startsWith("vless://") ||
-              value.startsWith("vmess://") ||
-              value.startsWith("trojan://") ||
-              value.startsWith("ss://")
+        statusElement.textContent =
+          "🔴 ТЕХНИЧЕСКИЕ РАБОТЫ";
+
+
+        maintenanceMessage.classList.remove(
+          "hidden"
+        );
+
+        mainContent.classList.add(
+          "hidden"
+        );
+
+
+        return;
+      }
+
+
+      /*
+       * Если техработы выключены
+       */
+
+      maintenanceMessage.classList.add(
+        "hidden"
+      );
+
+      mainContent.classList.remove(
+        "hidden"
+      );
+
+
+      /*
+       * =================================
+       * ОБЩИЙ СТАТУС
+       * =================================
+       */
+
+      if (data.online === true) {
+
+        statusElement.className =
+          "status";
+
+        statusElement.textContent =
+          "🟢 СИСТЕМА РАБОТАЕТ";
+
+      } else {
+
+        statusElement.className =
+          "status offline";
+
+        statusElement.textContent =
+          "🔴 ЕСТЬ ПРОБЛЕМЫ";
+
+      }
+
+
+      /*
+       * =================================
+       * ОБЩЕЕ КОЛИЧЕСТВО
+       * =================================
+       */
+
+      totalElement.textContent =
+        Number.isFinite(data.configs)
+          ? data.configs
+          : "—";
+
+
+      /*
+       * =================================
+       * ИСТОЧНИКИ
+       * =================================
+       */
+
+      sourcesElement.innerHTML = "";
+
+
+      if (
+        Array.isArray(data.sources) &&
+        data.sources.length > 0
+      ) {
+
+        data.sources.forEach(
+          (source, index) => {
+
+            const block =
+              document.createElement("div");
+
+            block.className =
+              "source";
+
+
+            const name =
+              source.name ||
+              `Источник ${index + 1}`;
+
+
+            const configs =
+              source.configs !== undefined
+                ? source.configs
+                : "—";
+
+
+            const updated =
+              source.updated &&
+              source.updated !== ""
+                ? source.updated
+                : "—";
+
+
+            const online =
+              source.online !== false;
+
+
+            block.innerHTML = `
+
+              <div class="source-title">
+                ${name}
+              </div>
+
+              <div class="source-info">
+
+                <span class="${
+                  online
+                    ? "source-ok"
+                    : "source-error"
+                }">
+
+                  ${
+                    online
+                      ? "🟢 Источник работает"
+                      : "🔴 Источник недоступен"
+                  }
+
+                </span>
+
+                <br>
+
+                📦 Конфигов:
+                ${configs}
+
+                <br>
+
+                🕐 Обновление:
+                ${updated}
+
+              </div>
+
+            `;
+
+
+            sourcesElement.appendChild(
+              block
             );
 
-          })
-          .length;
-    }
+          }
+        );
+
+      }
 
 
-    /*
-     * Статус
-     */
+      /*
+       * =================================
+       * ОБЩЕЕ ВРЕМЯ ОБНОВЛЕНИЯ
+       * =================================
+       */
 
-    if (status.online === true) {
+      if (data.updated) {
 
-      statusElement.className =
-        "status";
+        const date =
+          new Date(data.updated);
 
-      statusElement.textContent =
-        "🟢 СИСТЕМА РАБОТАЕТ";
 
-      serviceInfo.innerHTML =
-        "🟢 Сервис доступен";
+        if (
+          !Number.isNaN(
+            date.getTime()
+          )
+        ) {
 
-    } else {
+          updatedElement.textContent =
+            date.toLocaleString(
+              "ru-RU",
+              {
+                dateStyle: "medium",
+                timeStyle: "short"
+              }
+            );
+
+        } else {
+
+          updatedElement.textContent =
+            data.updated;
+
+        }
+
+      } else {
+
+        updatedElement.textContent =
+          "—";
+
+      }
+
+
+    } catch (error) {
+
+      console.error(
+        "Status error:",
+        error
+      );
+
+
+      /*
+       * Если status.json недоступен
+       */
 
       statusElement.className =
         "status offline";
 
       statusElement.textContent =
-        "🔴 СЕРВИС НЕДОСТУПЕН";
-
-      serviceInfo.innerHTML =
-        '<span class="error">🔴 Сервис недоступен</span>';
-    }
+        "🔴 ОШИБКА ПРОВЕРКИ";
 
 
-    /*
-     * Количество конфигов
-     */
+      maintenanceMessage.classList.add(
+        "hidden"
+      );
 
-    totalElement.textContent =
-      configs;
+      mainContent.classList.remove(
+        "hidden"
+      );
 
 
-    /*
-     * Дата обновления
-     */
+      totalElement.textContent =
+        "—";
 
-    if (status.updated) {
 
-      const date =
-        new Date(status.updated);
+      sourcesElement.innerHTML = "";
+
 
       updatedElement.textContent =
-        date.toLocaleString(
-          "ru-RU",
-          {
-            dateStyle: "medium",
-            timeStyle: "short"
-          }
-        );
+        "—";
 
-    } else {
-
-      updatedElement.textContent =
-        "дата не указана";
     }
 
-
-  } catch (error) {
-
-    console.error(error);
-
-
-    statusElement.className =
-      "status offline";
-
-    statusElement.textContent =
-      "🔴 ОШИБКА ПРОВЕРКИ";
-
-
-    serviceInfo.innerHTML =
-      '<span class="error">🔴 Не удалось получить данные</span>';
-
-
-    totalElement.textContent =
-      "—";
-
-
-    updatedElement.textContent =
-      "нет данных";
   }
 
-}
+
+  /*
+   * Первый запуск
+   */
+
+  loadStatus();
 
 
-/*
- * Запуск
- */
+  /*
+   * Обновление каждые 60 секунд
+   */
 
-loadStatus();
-
-
-/*
- * Автообновление каждые 60 секунд
- */
-
-setInterval(
-  loadStatus,
-  60000
-);
+  setInterval(
+    loadStatus,
+    60000
+  );
 
 </script>
 
 </body>
+
 </html>
