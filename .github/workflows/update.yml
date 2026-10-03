@@ -1,7 +1,8 @@
-name: Auto Update Test
+name: Update source status
 
 on:
   workflow_dispatch:
+
   schedule:
     - cron: "*/30 * * * *"
 
@@ -13,14 +14,143 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Скачать свежий файл
-        run: |
-          curl -L --fail \
-            "https://raw.githubusercontent.com/github/gitignore/main/README.md" \
-            -o test.txt
 
-      - name: Сохранить результат
-        uses: actions/upload-artifact@v4
-        with:
-          name: updated-file
-          path: test.txt
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check sources
+        env:
+          SOURCE_1: "https://example.com/source1.txt"
+          SOURCE_2: "https://example.com/source2.txt"
+        run: |
+
+          mkdir -p data
+
+          python3 <<'PY'
+          import json
+          import hashlib
+          import urllib.request
+          from datetime import datetime, timezone
+
+          sources = [
+              {
+                  "name": "Источник 1",
+                  "url": "https://example.com/source1.txt"
+              },
+              {
+                  "name": "Источник 2",
+                  "url": "https://example.com/source2.txt"
+              }
+          ]
+
+          results = []
+
+          for source in sources:
+
+              try:
+
+                  request = urllib.request.Request(
+                      source["url"],
+                      headers={
+                          "User-Agent": "GitHub-Actions"
+                      }
+                  )
+
+                  with urllib.request.urlopen(
+                      request,
+                      timeout=30
+                  ) as response:
+
+                      content = response.read()
+
+                  text = content.decode(
+                      "utf-8",
+                      errors="replace"
+                  )
+
+                  sha256 = hashlib.sha256(
+                      content
+                  ).hexdigest()
+
+                  lines = len(
+                      text.splitlines()
+                  )
+
+                  results.append({
+                      "name": source["name"],
+                      "online": True,
+                      "lines": lines,
+                      "sha256": sha256,
+                      "checked": datetime.now(
+                          timezone.utc
+                      ).isoformat()
+                  })
+
+              except Exception as error:
+
+                  results.append({
+                      "name": source["name"],
+                      "online": False,
+                      "lines": 0,
+                      "sha256": None,
+                      "checked": datetime.now(
+                          timezone.utc
+                      ).isoformat(),
+                      "error": str(error)
+                  })
+
+
+          online = all(
+              source["online"]
+              for source in results
+          )
+
+
+          status = {
+              "online": online,
+              "maintenance": False,
+              "title": "ObxodBS by Edicoral",
+              "description":
+                  "Автоматическая проверка источников",
+              "sources": results,
+              "updated": datetime.now(
+                  timezone.utc
+              ).isoformat()
+          }
+
+
+          with open(
+              "status.json",
+              "w",
+              encoding="utf-8"
+          ) as file:
+
+              json.dump(
+                  status,
+                  file,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+          PY
+
+      - name: Commit status
+        run: |
+
+          git config user.name \
+            "github-actions[bot]"
+
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add status.json
+
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+
+          git commit \
+            -m "Update source status"
+
+          git push
