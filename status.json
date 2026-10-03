@@ -1,6 +1,19 @@
 {
   "online": true,
+  "maintenance": false,
   "title": "ObxodBS by Edicoral",
   "configs": 210,
-  "updated": "2026-10-03T08:02:52Z"
+  "sources": [
+    {
+      "name": "Источник 1",
+      "configs": 150,
+      "updated": "-"
+    },
+    {
+      "name": "Источник 2",
+      "configs": 60,
+      "updated": "-"
+    }
+  ],
+  "updated": "2026-10-03T07:49:24Z"
 }
