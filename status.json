@@ -1,19 +1,25 @@
 {
-  "online": true,
+  "online": false,
   "maintenance": false,
   "title": "ObxodBS by Edicoral",
-  "configs": 210,
+  "description": "Автоматическая проверка источников",
   "sources": [
     {
       "name": "Источник 1",
-      "configs": 150,
-      "updated": "-"
+      "online": false,
+      "lines": 0,
+      "sha256": null,
+      "checked": "2026-10-03T08:41:01.385469+00:00",
+      "error": "HTTP Error 404: Not Found"
     },
     {
       "name": "Источник 2",
-      "configs": 60,
-      "updated": "-"
+      "online": false,
+      "lines": 0,
+      "sha256": null,
+      "checked": "2026-10-03T08:41:01.420484+00:00",
+      "error": "HTTP Error 404: Not Found"
     }
   ],
-  "updated": "2026-10-03T07:49:24Z"
+  "updated": "2026-10-03T08:41:01.420581+00:00"
 }
